@@ -92,6 +92,10 @@ module ImpressionistController
         query[param] = full_statement[param]
         query
       end
+      if unique_opts.include?(:within)
+        query.merge!(:created_at => (unique_opts[:within]..Time.now))
+      end
+      query
     end
 
     # creates a statment hash that contains default values for creating an impression.
