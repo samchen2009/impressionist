@@ -86,16 +86,21 @@ module ImpressionistController
 
     # creates the query to check for uniqueness
     def unique_query(unique_opts,impressionable=nil)
+      debugger
       full_statement = direct_create_statement({},impressionable)
       # reduce the full statement to the params we need for the specified unique options
-      r = unique_opts.reduce({}) do |query, param|
-        query[param] = full_statement[param]
-        query
+      opts = unique_opts.reduce({}) do |query, param|
+        if param.is_a? Hash
+          query.merge param
+        else
+          query[param] = full_statement[param]
+          query
+        end
       end
-      if unique_opts.include?(:within)
-        r.merge!(:created_at => (unique_opts[:within]..Time.now))
+      if opts.include?(:within)
+        opts.merge!(:created_at => (opts[:within].ago..Time.now)).except!(:within)
       end
-      r
+      opts
     end
 
     # creates a statment hash that contains default values for creating an impression.
