@@ -86,7 +86,6 @@ module ImpressionistController
 
     # creates the query to check for uniqueness
     def unique_query(unique_opts,impressionable=nil)
-      debugger
       full_statement = direct_create_statement({},impressionable)
       # reduce the full statement to the params we need for the specified unique options
       opts = unique_opts.reduce({}) do |query, param|
